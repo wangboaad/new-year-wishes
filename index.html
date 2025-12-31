@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026新年许愿 - 愿所有美好如期而至</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .title {
+            font-size: 3.5em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #ff6b6b, 0 0 40px #ff6b6b; }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px #fff, 0 0 30px #ff6b6b, 0 0 40px #ff6b6b, 0 0 50px #ff6b6b; }
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #f0f0f0;
+            margin-bottom: 20px;
+        }
+
+        .fireworks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            animation: firework 3s ease-out infinite;
+        }
+
+        .firework:nth-child(2n) { background: #4ecdc4; animation-delay: 1s; }
+        .firework:nth-child(3n) { background: #45b7d1; animation-delay: 2s; }
+        .firework:nth-child(4n) { background: #f9ca24; animation-delay: 0.5s; }
+        .firework:nth-child(5n) { background: #f0932b; animation-delay: 1.5s; }
+
+        @keyframes firework {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 1;
+            }
+            70% {
+                transform: translateY(10vh) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .countdown-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .countdown-title {
+            font-size: 2em;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .time-unit {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 120px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .time-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #fff;
+            display: block;
+        }
+
+        .time-label {
+            font-size: 1em;
+            color: #f0f0f0;
+            margin-top: 5px;
+        }
+
+        .audio-controls {
+            margin-top: 15px;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .volume-label {
+            color: #fff;
+            font-size: 0.9em;
+        }
+
+        .volume-slider {
+            width: 150px;
+        }
+
+        .sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: #fff;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .wish-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .wish-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .blessing-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .blessing-content {
+            font-size: 1.5em;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blessing-button {
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .blessing-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.9);
+            color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 20px;
+            animation: celebration 1s ease-in-out;
+        }
+
+        @keyframes celebration {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        .confetti-piece:nth-child(2n) { background: #4ecdc4; animation-delay: 0.5s; }
+        .confetti-piece:nth-child(3n) { background: #45b7d1; animation-delay: 1s; }
+        .confetti-piece:nth-child(4n) { background: #f9ca24; animation-delay: 1.5s; }
+        .confetti-piece:nth-child(5n) { background: #f0932b; animation-delay: 2s; }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .fortune-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .fortune-title {
+            font-size: 2em;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .fortune-box {
+            position: relative;
+            width: 200px;
+            height: 300px;
+            margin: 0 auto 30px;
+            background: linear-gradient(145deg, #8B4513, #A0522D);
+            border-radius: 20px;
+            border: 3px solid #D2691E;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .fortune-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            pointer-events: none;
+        }
+
+        .fortune-stick {
+            position: absolute;
+            width: 60px;
+            height: 200px;
+            background: linear-gradient(45deg, #FFF8DC, #FFFACD);
+            border: 2px solid #DAA520;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #8B4513;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            transform: translateY(100px);
+        }
+
+        .fortune-stick.normal {
+            color: #8B4513;
+            background: linear-gradient(45deg, #FFF8DC, #FFFACD);
+        }
+
+        .fortune-stick.super-lucky {
+            color: #FFD700;
+            background: linear-gradient(45deg, #DC143C, #B22222);
+            border-color: #FFD700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            font-family: '楷体', 'KaiTi', serif;
+        }
+
+        .fortune-stick.popping {
+            animation: stickPop 2s ease-out forwards;
+        }
+
+        @keyframes stickPop {
+            0% { transform: translateY(100px) rotate(0deg); }
+            20% { transform: translateY(-20px) rotate(-5deg); }
+            40% { transform: translateY(-40px) rotate(5deg); }
+            60% { transform: translateY(-30px) rotate(-2deg); }
+            80% { transform: translateY(-35px) rotate(2deg); }
+            100% { transform: translateY(-35px) rotate(0deg); }
+        }
+
+        .fortune-button {
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .fortune-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .fortune-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .fortune-result {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .fortune-card {
+            background: linear-gradient(145deg, #fff, #f0f0f0);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: cardShow 0.5s ease-out;
+        }
+
+        @keyframes cardShow {
+            0% { transform: scale(0.5) rotateY(180deg); opacity: 0; }
+            100% { transform: scale(1) rotateY(0deg); opacity: 1; }
+        }
+
+        .fortune-card.super-lucky {
+            background: linear-gradient(145deg, #DC143C, #B22222);
+            color: #FFD700;
+        }
+
+        .fortune-text {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-family: '楷体', 'KaiTi', serif;
+        }
+
+        .fortune-card.normal .fortune-text {
+            color: #8B4513;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+
+        .fortune-description {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .page-switch {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .my-fortune-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 3000;
+            overflow-y: auto;
+        }
+
+        .my-fortune-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .my-fortune-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .back-button {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .fortune-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .fortune-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .fortune-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .fortune-item.normal .fortune-item-text {
+            color: #FFF8DC;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+
+        .fortune-item.super-lucky {
+            background: rgba(220, 20, 60, 0.2);
+            border-color: #FFD700;
+        }
+
+        .fortune-item.super-lucky .fortune-item-text {
+            color: #FFD700;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-family: '楷体', 'KaiTi', serif;
+        }
+
+        .fortune-date {
+            color: #f0f0f0;
+            font-size: 0.9em;
+        }
+
+        /* 愿望墙样式 */
+        .wish-wall-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .wish-wall-title {
+            font-size: 1.8em;
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .wish-wall-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .wish-wall {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+
+        .wish-item {
+            position: absolute;
+            right: -300px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 1em;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: wishScroll 15s linear infinite;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .wish-item:nth-child(2n) {
+            background: rgba(255, 192, 203, 0.9);
+            border-color: rgba(255, 105, 180, 0.5);
+        }
+
+        .wish-item:nth-child(3n) {
+            background: rgba(173, 216, 230, 0.9);
+            border-color: rgba(70, 130, 180, 0.5);
+        }
+
+        .wish-item:nth-child(4n) {
+            background: rgba(144, 238, 144, 0.9);
+            border-color: rgba(34, 139, 34, 0.5);
+        }
+
+        .wish-item:nth-child(5n) {
+            background: rgba(255, 218, 185, 0.9);
+            border-color: rgba(255, 140, 0, 0.5);
+        }
+
+        @keyframes wishScroll {
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-150vw);
+                opacity: 1;
+            }
+        }
+
+        .wish-wall-empty {
+            text-align: center;
+            color: #f0f0f0;
+            font-size: 1.2em;
+            padding: 60px 20px;
+            opacity: 0.7;
+        }
+
+        .wish-wall-toggle {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .wish-wall-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
+        }
+
+        /* 已许愿状态样式 */
+        .wish-made-status {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+        }
+
+        .made-wish-info h3 {
+            color: #FFD700;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .made-wish-info p {
+            color: #fff;
+            font-size: 1.1em;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .title {
+                font-size: 2.5em;
+            }
+            
+            .countdown {
+                gap: 10px;
+            }
+            
+            .time-unit {
+                min-width: 80px;
+                padding: 15px;
+            }
+            
+            .time-number {
+                font-size: 2em;
+            }
+            
+            .fortune-box {
+                width: 150px;
+                height: 225px;
+            }
+            
+            .fortune-stick {
+                width: 45px;
+                height: 150px;
+                font-size: 1em;
+            }
+            
+            .fortune-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .wish-wall-container {
+                height: 150px;
+            }
+
+            .wish-item {
+                font-size: 0.9em;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="fireworks">
+            <div class="firework" v-for="i in 20" :key="i" :style="{
+                left: Math.random() * 100 + '%',
+                animationDelay: Math.random() * 3 + 's'
+            }"></div>
+        </div>
+
+        <div class="container">
+            <div class="header">
+                <h1 class="title">🎆 2026新年许愿 🎆</h1>
+                <p class="subtitle">愿所有美好如期而至</p>
+            </div>
+
+            <div class="countdown-section">
+                <h2 class="countdown-title">⏰ 距离2026年新年还有</h2>
+                <div class="countdown">
+                    <div class="time-unit">
+                        <span class="time-number">{{ days }}</span>
+                        <div class="time-label">天</div>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-number">{{ hours }}</span>
+                        <div class="time-label">时</div>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-number">{{ minutes }}</span>
+                        <div class="time-label">分</div>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-number">{{ seconds }}</span>
+                        <div class="time-label">秒</div>
+                    </div>
+                </div>
+                <div class="audio-controls">
+                    <div class="volume-control">
+                        <span class="volume-label">🔊 语音提示音量:</span>
+                        <input type="range" min="0" max="100" v-model="volume" class="volume-slider" @input="updateVolume">
+                        <span class="volume-label">{{ volume }}%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sections">
+                <div class="section">
+                    <h2 class="section-title">💫 许下新年愿望</h2>
+                    
+                    <!-- 如果已经许过愿，显示已许愿状态 -->
+                    <div v-if="hasMadeWish" class="wish-made-status">
+                        <div class="made-wish-info">
+                            <h3>🎊 您已经许过愿了！</h3>
+                            <p>您的愿望：{{ userWishData?.wish }}</p>
+                            <p>许愿时间：{{ userWishData?.timestamp }}</p>
+                        </div>
+                        <button @click="viewMyWish" class="wish-button">📋 查看我的愿望</button>
+                    </div>
+                    
+                    <!-- 如果没有许过愿，显示许愿表单 -->
+                    <form v-else @submit.prevent="makeWish">
+                        <div class="form-group">
+                            <label class="form-label">姓名:</label>
+                            <input type="text" v-model="wishForm.name" class="form-input" placeholder="请输入您的姓名" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">性别:</label>
+                            <select v-model="wishForm.gender" class="form-select" required>
+                                <option value="">请选择性别</option>
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">生日:</label>
+                            <input type="date" v-model="wishForm.birthday" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">新年愿望 (100字以内):</label>
+                            <textarea v-model="wishForm.wish" class="form-textarea" placeholder="请写下您的新年愿望..." maxlength="100" required></textarea>
+                            <small style="color: #f0f0f0;">{{ wishForm.wish.length }}/100 字</small>
+                        </div>
+                        <button type="submit" class="wish-button">✨ 许下愿望 ✨</button>
+                    </form>
+                    
+                    <div v-if="showSuccess" class="success-message">
+                        🎉 愿新的一年你的愿望会被实现！🎆🎆🎆
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">🎊 新年祝福语</h2>
+                    <div class="blessing-content">
+                        {{ currentBlessing }}
+                    </div>
+                    <button @click="generateBlessing" class="blessing-button">🎲 换一句祝福</button>
+                    <button @click="copyBlessing" class="blessing-button">📋 复制祝福语</button>
+                </div>
+            </div>
+
+            <div class="fortune-section">
+                <h2 class="fortune-title">🎯 抽取祈愿签</h2>
+                <div class="fortune-box">
+                    <div 
+                        class="fortune-stick" 
+                        :class="[fortuneStickType, { popping: isDrawing }]"
+                        @click="drawFortune"
+                        :style="{ transform: isDrawing ? '' : 'translateY(100px)' }"
+                    >
+                        {{ currentFortuneText }}
+                    </div>
+                </div>
+                <button 
+                    @click="drawFortune" 
+                    class="fortune-button"
+                    :disabled="hasDrawnToday"
+                >
+                    {{ hasDrawnToday ? '今日已抽签' : '🎯 抽取祈愿签' }}
+                </button>
+                <button @click="showMyFortune" class="fortune-button">
+                    📋 我的祈愿签 ({{ myFortunes.length }})
+                </button>
+            </div>
+
+            <div class="wish-wall-section">
+                <h2 class="wish-wall-title">💌 愿望墙</h2>
+                <div class="wish-wall-container">
+                    <div class="wish-wall" v-if="wishWallVisible && wishWall.length > 0">
+                        <div 
+                            v-for="(wish, index) in currentWishDisplay" 
+                            :key="index"
+                            class="wish-item"
+                            :style="{
+                                top: (index * 60) + 'px',
+                                animationDelay: (index * 2) + 's'
+                            }"
+                        >
+                            {{ wish.name }}：{{ wish.wish }}
+                        </div>
+                    </div>
+                    <div v-else class="wish-wall-empty">
+                        还没有人许愿，快来许下第一个愿望吧！✨
+                    </div>
+                </div>
+                <button @click="toggleWishWall" class="wish-wall-toggle">
+                    {{ wishWallVisible ? '隐藏愿望墙' : '显示愿望墙' }}
+                </button>
+            </div>
+
+            <div v-if="showFortuneResult" class="fortune-result" @click="closeFortuneResult">
+                <div class="fortune-card" :class="fortuneResult.type" @click.stop>
+                    <div class="fortune-text">{{ fortuneResult.text }}</div>
+                    <div class="fortune-description">
+                        {{ fortuneResult.description }}
+                    </div>
+                    <button @click="saveFortune" class="fortune-button">
+                        💾 收取祈愿签
+                    </button>
+                </div>
+            </div>
+
+            <div v-if="showMyFortunePage" class="my-fortune-page">
+                <div class="my-fortune-content">
+                    <div class="my-fortune-header">
+                        <h2 style="color: #fff; font-size: 2em;">📋 我的祈愿签</h2>
+                        <button @click="closeMyFortune" class="back-button">← 返回主页</button>
+                    </div>
+                    
+                    <div v-if="myFortunes.length === 0" style="text-align: center; color: #fff; font-size: 1.2em;">
+                        还没有抽取过祈愿签，去抽取一个吧！🎯
+                    </div>
+                    
+                    <div v-else class="fortune-grid">
+                        <div 
+                            v-for="fortune in myFortunes" 
+                            :key="fortune.id"
+                            class="fortune-item"
+                            :class="fortune.type"
+                        >
+                            <div class="fortune-item-text">{{ fortune.text }}</div>
+                            <div class="fortune-date">{{ fortune.date }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="confetti">
+            <div class="confetti-piece" v-for="i in 50" :key="'confetti-' + i" :style="{
+                left: Math.random() * 100 + '%',
+                animationDelay: Math.random() * 3 + 's',
+                animationDuration: (Math.random() * 2 + 2) + 's'
+            }"></div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    targetDate: new Date('2026-01-01T00:00:00'),
+                    currentTime: new Date(),
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0,
+                    countdownInterval: null,
+                    volume: 50,
+                    audioContext: null,
+                    lastMinute: null,
+                    
+                    wishForm: {
+                        name: '',
+                        gender: '',
+                        birthday: '',
+                        wish: ''
+                    },
+                    
+                    showSuccess: false,
+                    
+                    blessings: [
+                        '🎊 新年快乐！愿你2026年所有的美好都如期而至！',
+                        '🌟 新的一年，新的开始，愿你的人生更加精彩！',
+                        '🎈 祝你在新的一年里，工作顺利，身体健康，阖家幸福！',
+                        '🎉 愿2026年带给你无尽的欢乐和无限的可能！',
+                        '🌈 新年新气象，愿你的生活如彩虹般绚烂多彩！',
+                        '💖 祝你新年快乐，愿所有的心愿都能在新的一年实现！',
+                        '🎆 辞旧迎新，愿你在新的一年里收获满满！',
+                        '🦋 新年到来，愿你像蝴蝶一样自由飞舞，拥抱美好！',
+                        '🌸 花开富贵，恭喜发财！祝您新年行大运！',
+                        '🎪 新年新希望，愿你的每一天都充满惊喜和快乐！',
+                        '🌟 星光不负赶路人，时光不负有心人。新年快乐！',
+                        '🎊 新年将至，愿你心中有光，脚下有路，未来可期！',
+                        '🌈 新年快乐！愿你在新的一年里，平安喜乐，得偿所愿！',
+                        '🎈 告别2025，拥抱2026。愿你新年新气象！',
+                        '🌟 新年好！愿你在这个特殊的日子里收获满满的幸福！',
+                        '🎉 2026新年快乐！愿所有的美好都与你不期而遇！',
+                        '💫 新年到来，愿你的人生翻开崭新的一页！',
+                        '🎆 烟花绚烂迎新年，愿你的2026年如烟花般绚烂！',
+                        '🌺 新年快乐！愿你像花儿一样美丽绽放！',
+                        '🦄 新年新开始，愿你的生活像童话一样美好！'
+                    ],
+                    currentBlessing: '',
+                    
+                    // 祈愿签相关数据
+                    fortuneSticks: [
+                        '平平安安', '学业有成', '工作顺利', '身体健康', '阖家幸福',
+                        '心想事成', '万事如意', '恭喜发财', '大吉大利', '一帆风顺',
+                        '二龙腾飞', '三阳开泰', '四季平安', '五福临门', '六六大顺',
+                        '七星高照', '八方来财', '九九归一', '十全十美', '金榜题名',
+                        '前程似锦', '鹏程万里', '步步高升', '蒸蒸日上', '财源广进',
+                        '岁岁平安', '年年有余', '花好月圆', '团团圆圆', '和和美美',
+                        '甜甜蜜蜜', '恩恩爱爱', '永结同心', '白头偕老', '早生贵子',
+                        '聪明伶俐', '活泼可爱', '快乐成长', '聪明才智', '博学多才',
+                        '才华横溢', '出类拔萃', '独树一帜', '标新立异', '别出心裁',
+                        '精益求精', '尽善尽美', '美轮美奂', '巧夺天工', '鬼斧神工',
+                        '福星高照', '贵人相助', '逢凶化吉', '遇难呈祥', '否极泰来',
+                        '转危为安', '化险为夷', '安如泰山', '稳如磐石', '安如磐石',
+                        '马到成功', '旗开得胜', '百战百胜', '战无不胜', '攻无不克',
+                        '无往不利', '顺风顺水', '水到渠成', '瓜熟蒂落', '水落石出',
+                        '真相大白', '水清月明', '月白风清', '风调雨顺', '国泰民安',
+                        '风起云涌', '云蒸霞蔚', '霞光万道', '光芒万丈', '光辉灿烂',
+                        '璀璨夺目', '绚烂多彩', '五彩斑斓', '色彩斑斓', '万紫千红',
+                        '春暖花开', '春意盎然', '春花秋月', '花团锦簇', '柳暗花明',
+                        '山清水秀', '鸟语花香', '风景如画', '美不胜收', '赏心悦目',
+                        '沁人心脾', '心旷神怡', '神清气爽', '精神焕发', '容光焕发'
+                    ],
+                    hasDrawnToday: false,
+                    isDrawing: false,
+                    showFortuneResult: false,
+                    showMyFortunePage: false,
+                    fortuneResult: {
+                        text: '',
+                        type: 'normal',
+                        description: ''
+                    },
+                    currentFortuneText: '祈愿签',
+                    myFortunes: [],
+                    
+                    // 愿望墙相关数据
+                    wishWall: [],
+                    wishWallInterval: null,
+                    currentWishDisplay: [],
+                    wishWallVisible: true,
+                    currentWishIndex: 0,
+                    
+                    // 设备识别和用户管理
+                    deviceId: '',
+                    hasMadeWish: false,
+                    userWishData: null
+                };
+            },
+            
+            mounted() {
+                this.generateBlessing();
+                this.startCountdown();
+                this.initAudio();
+                this.loadMyFortunes();
+                this.checkDailyDraw();
+                this.initWishWall();
+                this.initDevice();
+            },
+            
+            beforeUnmount() {
+                if (this.countdownInterval) {
+                    clearInterval(this.countdownInterval);
+                }
+            },
+            
+            methods: {
+                startCountdown() {
+                    this.updateCountdown();
+                    this.countdownInterval = setInterval(() => {
+                        this.updateCountdown();
+                    }, 1000);
+                },
+                
+                updateCountdown() {
+                    this.currentTime = new Date();
+                    const difference = this.targetDate - this.currentTime;
+                    
+                    if (difference > 0) {
+                        this.days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                        this.hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        this.minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                        this.seconds = Math.floor((difference % (1000 * 60)) / 1000);
+                        
+                        this.checkForVoiceAlert();
+                    } else {
+                        this.days = 0;
+                        this.hours = 0;
+                        this.minutes = 0;
+                        this.seconds = 0;
+                        this.playNewYearSound();
+                    }
+                },
+                
+                checkForVoiceAlert() {
+                    const totalMinutes = this.days * 24 * 60 + this.hours * 60 + this.minutes;
+                    
+                    if (totalMinutes <= 1 && this.lastMinute !== this.minutes) {
+                        this.lastMinute = this.minutes;
+                        this.playVoiceAlert();
+                    }
+                },
+                
+                initAudio() {
+                    try {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    } catch (e) {
+                        console.log('音频上下文初始化失败');
+                    }
+                },
+                
+                updateVolume() {
+                },
+                
+                playVoiceAlert() {
+                    if (!this.audioContext) return;
+                    
+                    try {
+                        const oscillator = this.audioContext.createOscillator();
+                        const gainNode = this.audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(this.audioContext.destination);
+                        
+                        oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(this.volume / 100 * 0.3, this.audioContext.currentTime + 0.1);
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 1);
+                        
+                        oscillator.start(this.audioContext.currentTime);
+                        oscillator.stop(this.audioContext.currentTime + 1);
+                    } catch (e) {
+                        console.log('语音提示播放失败');
+                    }
+                },
+                
+                playNewYearSound() {
+                    if (!this.audioContext) return;
+                    
+                    try {
+                        for (let i = 0; i < 3; i++) {
+                            setTimeout(() => {
+                                const oscillator = this.audioContext.createOscillator();
+                                const gainNode = this.audioContext.createGain();
+                                
+                                oscillator.connect(gainNode);
+                                gainNode.connect(this.audioContext.destination);
+                                
+                                oscillator.frequency.setValueAtTime(1000, this.audioContext.currentTime);
+                                gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                                gainNode.gain.linearRampToValueAtTime(this.volume / 100 * 0.5, this.audioContext.currentTime + 0.1);
+                                gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 1);
+                                
+                                oscillator.start(this.audioContext.currentTime);
+                                oscillator.stop(this.audioContext.currentTime + 1);
+                            }, i * 500);
+                        }
+                    } catch (e) {
+                        console.log('新年音乐播放失败');
+                    }
+                },
+                
+                makeWish() {
+                    // 检查是否已经许过愿
+                    if (this.hasMadeWish) {
+                        alert('您已经许过愿了！每人只能许愿一次哦～ 🎊');
+                        return;
+                    }
+
+                    this.showSuccess = true;
+                    this.createConfetti();
+                    
+                    // 保存用户许愿数据
+                    this.saveUserWish(this.wishForm);
+                    
+                    // 将愿望添加到愿望墙
+                    this.addWishToWall(this.wishForm);
+                    
+                    setTimeout(() => {
+                        this.showSuccess = false;
+                        // 不清空表单，显示用户已许愿的状态
+                    }, 3000);
+                },
+                
+                generateBlessing() {
+                    const randomIndex = Math.floor(Math.random() * this.blessings.length);
+                    this.currentBlessing = this.blessings[randomIndex];
+                },
+                
+                copyBlessing() {
+                    navigator.clipboard.writeText(this.currentBlessing).then(() => {
+                        alert('祝福语已复制到剪贴板！🎉');
+                    }).catch(() => {
+                        alert('复制失败，请手动复制');
+                    });
+                },
+                
+                createConfetti() {
+                    const confettiContainer = document.querySelector('.confetti');
+                    if (!confettiContainer) return;
+                    
+                    for (let i = 0; i < 30; i++) {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti-piece';
+                        confetti.style.left = Math.random() * 100 + '%';
+                        confetti.style.animationDelay = Math.random() * 2 + 's';
+                        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                        
+                        confettiContainer.appendChild(confetti);
+                        
+                        setTimeout(() => {
+                            confetti.remove();
+                        }, 4000);
+                    }
+                },
+
+                // 祈愿签相关方法
+                checkDailyDraw() {
+                    const today = new Date().toDateString();
+                    const lastDraw = localStorage.getItem('lastFortuneDraw');
+                    this.hasDrawnToday = lastDraw === today;
+                },
+
+                loadMyFortunes() {
+                    const saved = localStorage.getItem('myFortunes');
+                    if (saved) {
+                        this.myFortunes = JSON.parse(saved);
+                    }
+                },
+
+                saveMyFortunes() {
+                    localStorage.setItem('myFortunes', JSON.stringify(this.myFortunes));
+                },
+
+                drawFortune() {
+                    if (this.hasDrawnToday || this.isDrawing) return;
+                    
+                    this.isDrawing = true;
+                    this.currentFortuneText = '抽签中...';
+                    
+                    setTimeout(() => {
+                        // 1% 概率抽到超级幸运签
+                        const isSuperLucky = Math.random() < 0.01;
+                        
+                        let fortuneText, description, type;
+                        
+                        if (isSuperLucky) {
+                            fortuneText = '新的一年 运气逆天';
+                            description = '🎉 恭喜！您抽到了超级幸运签！这意味着您在2026年将会拥有超乎寻常的好运，所有的事情都会朝着最好的方向发展！';
+                            type = 'super-lucky';
+                            this.createSuperLuckyConfetti();
+                        } else {
+                            const randomIndex = Math.floor(Math.random() * this.fortuneSticks.length);
+                            fortuneText = this.fortuneSticks[randomIndex];
+                            description = this.getFortuneDescription(fortuneText);
+                            type = 'normal';
+                        }
+                        
+                        this.fortuneResult = {
+                            text: fortuneText,
+                            type: type,
+                            description: description
+                        };
+                        
+                        this.showFortuneResult = true;
+                        this.isDrawing = false;
+                        
+                        // 标记今天已经抽过签
+                        const today = new Date().toDateString();
+                        localStorage.setItem('lastFortuneDraw', today);
+                        this.hasDrawnToday = true;
+                    }, 2000);
+                },
+
+                getFortuneDescription(text) {
+                    const descriptions = {
+                        '平平安安': '愿您在新的一年里平平安安，身体健康，万事如意！',
+                        '学业有成': '祝您学业进步，学有所成，金榜题名！',
+                        '工作顺利': '愿您工作顺利，事业有成，升职加薪！',
+                        '身体健康': '祝您身体健康，精神饱满，活力四射！',
+                        '阖家幸福': '愿您阖家幸福美满，家人健康快乐！',
+                        '心想事成': '祝您心想事成，所有愿望都能实现！',
+                        '万事如意': '愿您万事如意，好运连连！',
+                        '恭喜发财': '祝您财源广进，恭喜发财！',
+                        '大吉大利': '愿您大吉大利，好运常伴！',
+                        '一帆风顺': '祝您一帆风顺，事事顺利！',
+                        '二龙腾飞': '愿您如龙腾飞，事业蒸蒸日上！',
+                        '三阳开泰': '祝您三阳开泰，万象更新！',
+                        '四季平安': '愿您四季平安，时时好运！',
+                        '五福临门': '祝您五福临门，福星高照！',
+                        '六六大顺': '愿您六六大顺，万事顺心！',
+                        '七星高照': '祝您七星高照，贵人相助！',
+                        '八方来财': '愿您八方来财，财源滚滚！',
+                        '九九归一': '祝您九九归一，十全十美！',
+                        '十全十美': '愿您十全十美，完美无缺！',
+                        '金榜题名': '祝您金榜题名，学业有成！',
+                        '前程似锦': '愿您前程似锦，未来光明！',
+                        '鹏程万里': '祝您鹏程万里，前程无量！',
+                        '步步高升': '愿您步步高升，蒸蒸日上！',
+                        '蒸蒸日上': '祝您事业蒸蒸日上，生活美满！',
+                        '财源广进': '愿您财源广进，财源滚滚！',
+                        '岁岁平安': '祝您岁岁平安，年年健康！',
+                        '年年有余': '愿您年年有余，生活富足！',
+                        '花好月圆': '祝您花好月圆，阖家团圆！',
+                        '团团圆圆': '愿您团团圆圆，家庭和睦！',
+                        '和和美美': '祝您和和美美，幸福美满！',
+                        '甜甜蜜蜜': '愿您甜甜蜜蜜，爱情美满！',
+                        '恩恩爱爱': '祝您恩恩爱爱，白头偕老！',
+                        '永结同心': '愿您永结同心，百年好合！',
+                        '白头偕老': '祝您白头偕老，相伴一生！',
+                        '早生贵子': '愿您早生贵子，家庭幸福！',
+                        '聪明伶俐': '祝您聪明伶俐，才华横溢！',
+                        '活泼可爱': '愿您活泼可爱，快乐无忧！',
+                        '快乐成长': '祝您快乐成长，前程似锦！',
+                        '聪明才智': '愿您聪明才智，智慧超群！',
+                        '博学多才': '祝您博学多才，学富五车！',
+                        '才华横溢': '愿您才华横溢，出类拔萃！',
+                        '出类拔萃': '祝您出类拔萃，独一无二！',
+                        '独树一帜': '愿您独树一帜，标新立异！',
+                        '标新立异': '祝您标新立异，别出心裁！',
+                        '别出心裁': '愿您别出心裁，创意无限！',
+                        '精益求精': '祝您精益求精，尽善尽美！',
+                        '尽善尽美': '愿您尽善尽美，完美无缺！',
+                        '美轮美奂': '祝您美轮奂，精彩纷呈！',
+                        '巧夺天工': '愿您巧夺天工，鬼斧神工！',
+                        '鬼斧神工': '祝您鬼斧神工，技艺超群！',
+                        '福星高照': '愿您福星高照，贵人相助！',
+                        '贵人相助': '祝您贵人相助，逢凶化吉！',
+                        '逢凶化吉': '愿您逢凶化吉，遇难呈祥！',
+                        '遇难呈祥': '祝您遇难呈祥，否极泰来！',
+                        '否极泰来': '愿您否极泰来，转危为安！',
+                        '转危为安': '祝您转危为安，化险为夷！',
+                        '化险为夷': '愿您化险为夷，安如泰山！',
+                        '安如泰山': '祝您安如泰山，稳如磐石！',
+                        '稳如磐石': '愿您稳如磐石，坚不可摧！',
+                        '马到成功': '祝您马到成功，旗开得胜！',
+                        '旗开得胜': '愿您旗开得胜，百战百胜！',
+                        '百战百胜': '祝您百战百胜，战无不胜！',
+                        '战无不胜': '愿您战无不胜，攻无不克！',
+                        '攻无不克': '祝您攻无不克，无往不利！',
+                        '无往不利': '愿您无往不利，顺风顺水！',
+                        '顺风顺水': '祝您顺风顺水，水到渠成！',
+                        '水到渠成': '愿您水到渠成，瓜熟蒂落！',
+                        '瓜熟蒂落': '祝您瓜熟蒂落，水落石出！',
+                        '水落石出': '愿您水落石出，真相大白！',
+                        '真相大白': '祝您真相大白，水清月明！',
+                        '水清月明': '愿您水清月明，月白风清！',
+                        '月白风清': '祝您月白风清，风调雨顺！',
+                        '风调雨顺': '愿您风调雨顺，国泰民安！',
+                        '国泰民安': '祝您国泰民安，风起云涌！',
+                        '风起云涌': '愿您风起云涌，云蒸霞蔚！',
+                        '云蒸霞蔚': '祝您云蒸霞蔚，霞光万道！',
+                        '霞光万道': '愿您霞光万道，光芒万丈！',
+                        '光芒万丈': '祝您光芒万丈，光辉灿烂！',
+                        '光辉灿烂': '愿您光辉灿烂，璀璨夺目！',
+                        '璀璨夺目': '祝您璀璨夺目，绚烂多彩！',
+                        '绚烂多彩': '愿您绚烂多彩，五彩斑斓！',
+                        '五彩斑斓': '祝您五彩斑斓，色彩斑斓！',
+                        '色彩斑斓': '愿您色彩斑斓，万紫千红！',
+                        '万紫千红': '祝您万紫千红，春暖花开！',
+                        '春暖花开': '愿您春暖花开，春意盎然！',
+                        '春意盎然': '祝您春意盎然，春花秋月！',
+                        '春花秋月': '愿您春花秋月，花团锦簇！',
+                        '花团锦簇': '祝您花团锦簇，柳暗花明！',
+                        '柳暗花明': '愿您柳暗花明，山清水秀！',
+                        '山清水秀': '祝您山清水秀，鸟语花香！',
+                        '鸟语花香': '愿您鸟语花香，风景如画！',
+                        '风景如画': '祝您风景如画，美不胜收！',
+                        '美不胜收': '愿您美不胜收，赏心悦目！',
+                        '赏心悦目': '祝您赏心悦目，沁人心脾！',
+                        '沁人心脾': '愿您沁人心脾，心旷神怡！',
+                        '心旷神怡': '祝您心旷神怡，神清气爽！',
+                        '神清气爽': '愿您神清气爽，精神焕发！',
+                        '精神焕发': '祝您精神焕发，容光焕发！',
+                        '容光焕发': '愿您容光焕发，青春永驻！'
+                    };
+                    
+                    return descriptions[text] || `愿您${text}，新年快乐！`;
+                },
+
+                createSuperLuckyConfetti() {
+                    const confettiContainer = document.querySelector('.confetti');
+                    if (!confettiContainer) return;
+                    
+                    for (let i = 0; i < 100; i++) {
+                        setTimeout(() => {
+                            const confetti = document.createElement('div');
+                            confetti.className = 'confetti-piece';
+                            confetti.style.left = Math.random() * 100 + '%';
+                            confetti.style.animationDelay = Math.random() * 2 + 's';
+                            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                            confetti.style.background = ['#FFD700', '#DC143C', '#FF69B4', '#00CED1', '#32CD32'][Math.floor(Math.random() * 5)];
+                            
+                            confettiContainer.appendChild(confetti);
+                            
+                            setTimeout(() => {
+                                confetti.remove();
+                            }, 4000);
+                        }, i * 50);
+                    }
+                },
+
+                closeFortuneResult() {
+                    this.showFortuneResult = false;
+                },
+
+                saveFortune() {
+                    const newFortune = {
+                        id: Date.now(),
+                        text: this.fortuneResult.text,
+                        type: this.fortuneResult.type,
+                        date: new Date().toLocaleString('zh-CN'),
+                        description: this.fortuneResult.description
+                    };
+                    
+                    this.myFortunes.unshift(newFortune);
+                    this.saveMyFortunes();
+                    this.closeFortuneResult();
+                    
+                    alert('祈愿签已保存到您的收藏中！🎉');
+                },
+
+                showMyFortune() {
+                    this.showMyFortunePage = true;
+                },
+
+                closeMyFortune() {
+                    this.showMyFortunePage = false;
+                },
+
+                // 愿望墙相关方法
+                initWishWall() {
+                    this.loadWishWall();
+                    this.startWishWallAnimation();
+                },
+
+                loadWishWall() {
+                    const saved = localStorage.getItem('wishWall');
+                    if (saved) {
+                        this.wishWall = JSON.parse(saved);
+                    }
+                },
+
+                saveWishWall() {
+                    localStorage.setItem('wishWall', JSON.stringify(this.wishWall));
+                },
+
+                startWishWallAnimation() {
+                    if (this.wishWallInterval) {
+                        clearInterval(this.wishWallInterval);
+                    }
+
+                    this.currentWishIndex = 0;
+                    this.updateWishWallDisplay();
+                    
+                    this.wishWallInterval = setInterval(() => {
+                        this.updateWishWallDisplay();
+                    }, 18000);
+                },
+
+                updateWishWallDisplay() {
+                    if (this.wishWall.length === 0) {
+                        this.currentWishDisplay = [];
+                        return;
+                    }
+
+                    // 循环显示所有愿望，每次显示3个
+                    const displayCount = Math.min(3, this.wishWall.length);
+                    this.currentWishDisplay = [];
+                    
+                    for (let i = 0; i < displayCount; i++) {
+                        const index = (this.currentWishIndex + i) % this.wishWall.length;
+                        this.currentWishDisplay.push(this.wishWall[index]);
+                    }
+                    
+                    this.currentWishIndex = (this.currentWishIndex + displayCount) % this.wishWall.length;
+                    
+                    setTimeout(() => {
+                        this.currentWishDisplay = [];
+                    }, 17000);
+                },
+
+                addWishToWall(wishData) {
+                    const wish = {
+                        id: Date.now(),
+                        name: wishData.name,
+                        wish: wishData.wish,
+                        timestamp: new Date().toLocaleString('zh-CN')
+                    };
+
+                    this.wishWall.unshift(wish);
+                    this.saveWishWall();
+                    this.updateWishWallDisplay();
+                },
+
+                toggleWishWall() {
+                    this.wishWallVisible = !this.wishWallVisible;
+                },
+
+                // 设备识别和用户管理
+                initDevice() {
+                    this.generateDeviceId();
+                    this.checkUserWishStatus();
+                },
+
+                generateDeviceId() {
+                    let deviceId = localStorage.getItem('deviceId');
+                    if (!deviceId) {
+                        deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                        localStorage.setItem('deviceId', deviceId);
+                    }
+                    this.deviceId = deviceId;
+                },
+
+                checkUserWishStatus() {
+                    const userWish = localStorage.getItem(`userWish_${this.deviceId}`);
+                    if (userWish) {
+                        this.hasMadeWish = true;
+                        this.userWishData = JSON.parse(userWish);
+                        
+                        // 更新许愿表单显示用户之前的数据
+                        this.wishForm = {
+                            name: this.userWishData.name,
+                            gender: this.userWishData.gender,
+                            birthday: this.userWishData.birthday,
+                            wish: this.userWishData.wish
+                        };
+                    }
+                },
+
+                saveUserWish(wishData) {
+                    const userWish = {
+                        deviceId: this.deviceId,
+                        ...wishData,
+                        timestamp: new Date().toLocaleString('zh-CN')
+                    };
+                    localStorage.setItem(`userWish_${this.deviceId}`, JSON.stringify(userWish));
+                    this.hasMadeWish = true;
+                    this.userWishData = userWish;
+                },
+
+                viewMyWish() {
+                    alert(`您的愿望：${this.userWishData?.wish}\n许愿时间：${this.userWishData?.timestamp}`);
+                },
+
+                // 计算属性
+                fortuneStickType() {
+                    if (this.fortuneResult.type === 'super-lucky') {
+                        return 'super-lucky';
+                    }
+                    return 'normal';
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
