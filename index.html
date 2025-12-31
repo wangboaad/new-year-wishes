@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2026新年许愿 - 愿所有美好如期而至</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -1052,7 +1054,11 @@
                     // 设备识别和用户管理
                     deviceId: '',
                     hasMadeWish: false,
-                    userWishData: null
+                    userWishData: null,
+                    
+                    // Firebase 配置
+                    firebaseInitialized: false,
+                    firebaseError: null
                 };
             },
             
@@ -1060,6 +1066,7 @@
                 this.generateBlessing();
                 this.startCountdown();
                 this.initAudio();
+                this.initFirebase();
                 this.loadMyFortunes();
                 this.checkDailyDraw();
                 this.initWishWall();
@@ -1183,6 +1190,11 @@
                     
                     // 将愿望添加到愿望墙
                     this.addWishToWall(this.wishForm);
+                    
+                    // 同步到云端（如果有Firebase）
+                    if (this.firebaseInitialized) {
+                        this.syncWishToCloud(this.wishForm);
+                    }
                     
                     setTimeout(() => {
                         this.showSuccess = false;
@@ -1443,13 +1455,51 @@
                 },
 
                 loadWishWall() {
-                    const saved = localStorage.getItem('wishWall');
-                    if (saved) {
-                        this.wishWall = JSON.parse(saved);
+                    // 优先从云端加载数据
+                    if (this.firebaseInitialized) {
+                        this.loadWishWallFromCloud();
+                    } else {
+                        // 如果没有云端连接，从本地加载
+                        this.loadWishWallFromLocal();
                     }
                 },
 
-                saveWishWall() {
+                loadWishWallFromCloud() {
+                    if (!this.firebaseInitialized) return;
+
+                    const db = firebase.database();
+                    db.ref('wishWall').once('value').then((snapshot) => {
+                        const cloudWishWall = snapshot.val();
+                        
+                        if (cloudWishWall) {
+                            // 从云端获取到数据
+                            const wishList = Object.values(cloudWishWall);
+                            this.wishWall = wishList;
+                            // 保存到本地作为备份
+                            this.saveWishWallToLocal();
+                            console.log('从云端加载愿望墙数据:', wishList.length, '条愿望');
+                        } else {
+                            // 云端没有数据，从本地加载
+                            this.loadWishWallFromLocal();
+                        }
+                    }).catch((error) => {
+                        console.error('从云端加载愿望墙失败:', error);
+                        // 如果云端加载失败，从本地加载
+                        this.loadWishWallFromLocal();
+                    });
+                },
+
+                loadWishWallFromLocal() {
+                    const saved = localStorage.getItem('wishWall');
+                    if (saved) {
+                        this.wishWall = JSON.parse(saved);
+                        console.log('从本地加载愿望墙数据:', this.wishWall.length, '条愿望');
+                    } else {
+                        this.wishWall = [];
+                    }
+                },
+
+                saveWishWallToLocal() {
                     localStorage.setItem('wishWall', JSON.stringify(this.wishWall));
                 },
 
@@ -1490,15 +1540,33 @@
 
                 addWishToWall(wishData) {
                     const wish = {
-                        id: Date.now(),
+                        id: Date.now().toString(),
                         name: wishData.name,
                         wish: wishData.wish,
-                        timestamp: new Date().toLocaleString('zh-CN')
+                        timestamp: new Date().toISOString(),
+                        deviceId: this.deviceId
                     };
 
                     this.wishWall.unshift(wish);
-                    this.saveWishWall();
+                    this.saveWishWallToLocal();
                     this.updateWishWallDisplay();
+
+                    // 如果有云端连接，保存到云端
+                    if (this.firebaseInitialized) {
+                        this.saveWishToCloud(wish);
+                    }
+                },
+
+                async saveWishToCloud(wish) {
+                    if (!this.firebaseInitialized) return;
+
+                    try {
+                        const db = firebase.database();
+                        await db.ref(`wishWall/${wish.id}`).set(wish);
+                        console.log('愿望已保存到云端:', wish.name);
+                    } catch (error) {
+                        console.error('保存愿望到云端失败:', error);
+                    }
                 },
 
                 toggleWishWall() {
@@ -1549,6 +1617,148 @@
 
                 viewMyWish() {
                     alert(`您的愿望：${this.userWishData?.wish}\n许愿时间：${this.userWishData?.timestamp}`);
+                },
+
+                // Firebase 初始化和配置
+                initFirebase() {
+                    // Firebase 配置 - 请替换为你自己的配置
+                    const firebaseConfig = {
+                        apiKey: "demo-api-key",
+                        authDomain: "demo.firebaseapp.com",
+                        databaseURL: "https://demo-default-rtdb.firebaseio.com",
+                        projectId: "demo-project",
+                        storageBucket: "demo.appspot.com",
+                        messagingSenderId: "123456789",
+                        appId: "demo-app-id"
+                    };
+
+                    try {
+                        // 初始化 Firebase
+                        if (!firebase.apps.length) {
+                            firebase.initializeApp(firebaseConfig);
+                        }
+                        
+                        // 检查 Firebase 是否初始化成功
+                        this.firebaseInitialized = true;
+                        console.log('Firebase 初始化成功');
+                        
+                        // 加载云端数据
+                        this.loadCloudData();
+                        
+                    } catch (error) {
+                        console.error('Firebase 初始化失败:', error);
+                        this.firebaseError = error.message;
+                        this.firebaseInitialized = false;
+                    }
+                },
+
+                // 从云端加载数据
+                async loadCloudData() {
+                    if (!this.firebaseInitialized) return;
+
+                    try {
+                        const db = firebase.database();
+                        
+                        // 加载愿望墙数据
+                        const wishWallSnapshot = await db.ref('wishWall').once('value');
+                        const cloudWishWall = wishWallSnapshot.val();
+                        
+                        if (cloudWishWall) {
+                            // 合并云端数据到本地
+                            this.wishWall = Object.values(cloudWishWall);
+                            this.saveWishWall(); // 保存到本地作为备份
+                        }
+
+                        // 加载用户愿望数据
+                        const userWishesSnapshot = await db.ref('userWishes').once('value');
+                        const cloudUserWishes = userWishesSnapshot.val();
+                        
+                        if (cloudUserWishes && this.deviceId) {
+                            const userWish = cloudUserWishes[this.deviceId];
+                            if (userWish) {
+                                this.hasMadeWish = true;
+                                this.userWishData = userWish;
+                                // 更新本地存储
+                                localStorage.setItem(`userWish_${this.deviceId}`, JSON.stringify(userWish));
+                            }
+                        }
+
+                        // 设置实时监听
+                        this.setupRealtimeListeners();
+                        
+                    } catch (error) {
+                        console.error('加载云端数据失败:', error);
+                    }
+                },
+
+                // 设置实时数据监听
+                setupRealtimeListeners() {
+                    if (!this.firebaseInitialized) return;
+
+                    const db = firebase.database();
+                    
+                    // 监听愿望墙变化
+                    db.ref('wishWall').on('value', (snapshot) => {
+                        const cloudWishWall = snapshot.val();
+                        if (cloudWishWall) {
+                            this.wishWall = Object.values(cloudWishWall);
+                            this.saveWishWallToLocal();
+                            console.log('实时更新愿望墙数据:', this.wishWall.length, '条愿望');
+                        }
+                    });
+
+                    // 监听用户愿望变化
+                    if (this.deviceId) {
+                        db.ref(`userWishes/${this.deviceId}`).on('value', (snapshot) => {
+                            const userWish = snapshot.val();
+                            if (userWish) {
+                                this.hasMadeWish = true;
+                                this.userWishData = userWish;
+                                localStorage.setItem(`userWish_${this.deviceId}`, JSON.stringify(userWish));
+                            }
+                        });
+                    }
+                },
+
+                // 保存数据到云端
+                async saveToCloud(path, data) {
+                    if (!this.firebaseInitialized) return false;
+
+                    try {
+                        const db = firebase.database();
+                        await db.ref(path).set(data);
+                        return true;
+                    } catch (error) {
+                        console.error('保存到云端失败:', error);
+                        return false;
+                    }
+                },
+
+                // 同步愿望到云端
+                async syncWishToCloud(wishData) {
+                    if (!this.firebaseInitialized) return;
+
+                    try {
+                        const db = firebase.database();
+                        const timestamp = new Date().toISOString();
+                        const wishWithTimestamp = { ...wishData, timestamp };
+
+                        // 保存到云端
+                        await db.ref(`userWishes/${this.deviceId}`).set(wishWithTimestamp);
+                        
+                        // 同时添加到愿望墙
+                        const wishWallEntry = {
+                            ...wishData,
+                            timestamp,
+                            deviceId: this.deviceId,
+                            id: Date.now().toString()
+                        };
+                        
+                        await db.ref(`wishWall/${wishWithTimestamp.id}`).set(wishWallEntry);
+                        
+                    } catch (error) {
+                        console.error('同步愿望到云端失败:', error);
+                    }
                 },
 
                 // 计算属性
